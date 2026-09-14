@@ -29,13 +29,16 @@ basemap imagery).
    Sestriere geofence.
 3. Project Settings -> API: copy the Project URL and the `anon` `public` key (**not**
    `service_role`, which must never end up in browser-shipped code).
-4. `cp .env.example .env.local` and fill in `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`.
+4. `cp .env.example .env.local` and fill in `PUBLIC_SUPABASE_URL` / `PUBLIC_SUPABASE_ANON_KEY`.
+   (Named `PUBLIC_` rather than Vite's usual `VITE_` prefix — Vercel's dashboard rejects env
+   var names starting with `VITE_`, so `vite.config.ts` sets `envPrefix: 'PUBLIC_'` instead.
+   Set the same two names, same way, in Vercel's Project Settings -> Environment Variables for
+   the deployed site — tick both Production and Preview.)
 5. Restart `npm run dev`. The fleet map's badge switches from "demo data" to "live: Supabase",
    and the geofence editor loads/saves the real polygon instead of just exporting snippets.
 
-Once this is wired up, the ESP32 firmware can report directly to Supabase's REST endpoint
-(`POST {url}/rest/v1/reports` with the anon key) instead of (or in addition to) the bench
-`backend/server` — not done yet, tracked as a follow-up.
+Once this is wired up, the ESP32 firmware reports directly to Supabase's REST endpoint
+(`POST {url}/rest/v1/reports` with the anon key) — see `firmware/bike-unit/README.md`.
 
 ## What's here
 
