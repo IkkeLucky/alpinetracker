@@ -1,0 +1,19 @@
+# PlatformIO
+firmware/**/.pio/
+firmware/**/.vscode/
+firmware/**/.pioenvs/
+firmware/**/.piolibdeps/
+
+# Node
+node_modules/
+npm-debug.log*
+backend/**/dist/
+
+# Data / secrets
+*.env
+.env.local
+backend/server/data/*.json
+
+# OS
+.DS_Store
+Thumbs.db
