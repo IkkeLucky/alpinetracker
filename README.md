@@ -13,23 +13,33 @@ connectivity architecture, compliance requirements, and business/funding context
 
 ```
 firmware/bike-unit/   ESP32 firmware: GPS + local geofence evaluation + servo lock + OLED + Wi-Fi reporting
-backend/server/       Local report-ingest server (Node.js/Express) the bike unit reports to
+backend/server/       Local report-ingest server (Node.js/Express) the bike unit reports to on the bench
+web/dashboard/         Operator web app: live fleet map + geofence-polygon editor (React/Leaflet/Supabase)
+supabase/              SQL schema for the Supabase project the dashboard (and eventually the bike unit) talks to
 mobile/               Placeholder for the Flutter rider/operator app (not started yet)
 docs/                 Project brief and reference material
 ```
 
-## Current milestone: ESP32 proof-of-concept
+## Current milestones
 
-Per the brief's "current prototype starting point": ESP32 reads GPS over UART, evaluates a
-trail-corridor geofence polygon locally in firmware, drives a servo as the lock stand-in,
-shows status on an OLED, and reports over Wi-Fi to a simple local server — buffering reports
-locally when Wi-Fi is unavailable and flushing them on reconnect.
+**ESP32 proof-of-concept** — per the brief's "current prototype starting point": ESP32 reads
+GPS over UART, evaluates a trail-corridor geofence polygon locally in firmware, drives a servo
+as the lock stand-in, shows status on an OLED, and reports over Wi-Fi to a simple local server —
+buffering reports locally when Wi-Fi is unavailable and flushing them on reconnect.
 
 Status: firmware and backend scaffolding implemented; **not yet flashed/tested on real
-hardware** in this session. See each subproject's README for build/run/wiring instructions
-and what's left to verify on the bench.
+hardware** (needs a local machine with the ESP32 attached — see `firmware/bike-unit/README.md`).
+
+**Operator web dashboard** — a fleet map (live positions, geofence status, lock state) and a
+geofence editor that draws the trail-corridor polygon on a map and exports it as a firmware C
+array, GeoJSON, or (once Supabase is configured) saves it straight to the database.
+
+Status: running, built, and manually verified end-to-end (draw → save → export all confirmed
+working). Works with mock data out of the box; wire up Supabase per `web/dashboard/README.md`
+for live/persistent data.
 
 ## Getting started
 
 - Firmware: [`firmware/bike-unit/README.md`](firmware/bike-unit/README.md)
-- Backend: [`backend/server/README.md`](backend/server/README.md)
+- Bench backend: [`backend/server/README.md`](backend/server/README.md)
+- Web dashboard: [`web/dashboard/README.md`](web/dashboard/README.md)
