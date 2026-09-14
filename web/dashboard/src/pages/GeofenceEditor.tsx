@@ -3,13 +3,13 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import '../lib/leafletIconFix';
 import DrawControl from '../components/DrawControl';
 import { DEFAULT_GEOFENCE, GEOFENCE_CENTER, type LatLng } from '../lib/geofence';
+import { GEOFENCE_ID } from '../lib/useGeofencePolygon';
 import { supabase, isSupabaseConfigured, type GeofenceRow } from '../lib/supabase';
-
-const GEOFENCE_ID = 'sestriere-via-lattea';
 
 export default function GeofenceEditor() {
   const [polygon, setPolygon] = useState<LatLng[]>(DEFAULT_GEOFENCE);
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   // Bumped after a fresh load from Supabase so DrawControl re-seeds its
   // layer with the loaded shape instead of the DEFAULT_GEOFENCE it mounted
   // with (DrawControl intentionally ignores polygon prop changes otherwise).
@@ -27,6 +27,7 @@ export default function GeofenceEditor() {
           const row = data as GeofenceRow | null;
           if (row?.polygon?.length) {
             setPolygon(row.polygon.map(([lat, lon]) => [lat, lon]));
+            setUpdatedAt(row.updated_at);
             setLoadKey((k) => k + 1);
           }
         },
@@ -52,13 +53,22 @@ export default function GeofenceEditor() {
       setSaveStatus('No Supabase project configured yet — copy a snippet below instead.');
       return;
     }
-    const { error } = await supabase
+    // .select().single() to get the row back with the trigger-set
+    // updated_at, rather than trusting a client-side clock for it.
+    const { data, error } = await supabase
       .from('geofences')
       .upsert(
         { id: GEOFENCE_ID, name: 'Sestriere / Via Lattea', polygon },
         { onConflict: 'id' },
-      );
-    setSaveStatus(error ? `Save failed: ${error.message}` : 'Saved to Supabase.');
+      )
+      .select()
+      .single();
+    if (error) {
+      setSaveStatus(`Save failed: ${error.message}`);
+      return;
+    }
+    setUpdatedAt((data as GeofenceRow).updated_at);
+    setSaveStatus('Saved to Supabase.');
   }
 
   return (
@@ -75,6 +85,7 @@ export default function GeofenceEditor() {
         configured this writes straight to the <code>geofences</code> table; until then, copy the
         generated firmware snippet by hand into{' '}
         <code>firmware/bike-unit/src/geofence.cpp</code>.
+        {updatedAt && ` Last updated ${new Date(updatedAt).toLocaleString()}.`}
       </p>
 
       <MapContainer center={GEOFENCE_CENTER} zoom={13} className="map">

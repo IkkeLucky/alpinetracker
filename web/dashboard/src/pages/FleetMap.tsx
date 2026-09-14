@@ -1,10 +1,13 @@
 import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
 import '../lib/leafletIconFix';
 import { useFleetReports } from '../lib/useFleetReports';
-import { DEFAULT_GEOFENCE, GEOFENCE_CENTER } from '../lib/geofence';
+import { useGeofencePolygon } from '../lib/useGeofencePolygon';
+import { GEOFENCE_CENTER } from '../lib/geofence';
+import FitBounds from '../components/FitBounds';
 
 export default function FleetMap() {
   const { reports, source } = useFleetReports();
+  const { polygon, updatedAt } = useGeofencePolygon();
 
   return (
     <div className="page">
@@ -14,13 +17,17 @@ export default function FleetMap() {
           {source === 'supabase' ? 'live: Supabase' : 'demo data (no Supabase configured)'}
         </span>
       </div>
+      {updatedAt && (
+        <p className="hint">Geofence last updated {new Date(updatedAt).toLocaleString()}</p>
+      )}
 
       <MapContainer center={GEOFENCE_CENTER} zoom={13} className="map">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Polygon positions={DEFAULT_GEOFENCE} pathOptions={{ color: '#2563eb', fillOpacity: 0.08 }} />
+        <FitBounds polygon={polygon} />
+        <Polygon positions={polygon} pathOptions={{ color: '#2563eb', fillOpacity: 0.08 }} />
         {reports.map((report) => (
           <Marker key={report.device_id} position={[report.lat, report.lon]}>
             <Popup>

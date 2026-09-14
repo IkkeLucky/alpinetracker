@@ -55,7 +55,7 @@ create policy "anon full access" on reports for all using (true) with check (tru
 drop policy if exists "anon full access" on geofences;
 create policy "anon full access" on geofences for all using (true) with check (true);
 
--- Lets the dashboard subscribe to new reports in real time.
+-- Lets the dashboard subscribe to new reports and geofence edits in real time.
 do $$
 begin
   if not exists (
@@ -64,7 +64,31 @@ begin
   ) then
     alter publication supabase_realtime add table reports;
   end if;
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'geofences'
+  ) then
+    alter publication supabase_realtime add table geofences;
+  end if;
 end $$;
+
+-- `default now()` on updated_at only fires on INSERT, not UPDATE — the
+-- geofence editor's upsert was silently leaving it stuck at creation time.
+-- A trigger is the fix that holds regardless of which client writes the row
+-- (dashboard upsert, SQL editor, anything added later).
+create or replace function set_updated_at()
+returns trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists geofences_set_updated_at on geofences;
+create trigger geofences_set_updated_at
+  before update on geofences
+  for each row
+  execute function set_updated_at();
 
 -- Seed the bench device. The firmware's device_id (DEVICE_ID in
 -- firmware/bike-unit/include/secrets.h) must have a matching row here —
