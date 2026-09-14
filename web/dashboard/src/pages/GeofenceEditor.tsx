@@ -1,41 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import '../lib/leafletIconFix';
 import DrawControl from '../components/DrawControl';
-import { DEFAULT_GEOFENCE, GEOFENCE_CENTER, type LatLng } from '../lib/geofence';
-import { GEOFENCE_ID } from '../lib/useGeofencePolygon';
+import { type LatLng } from '../lib/geofence';
+import { GEOFENCE_ID, useGeofencePolygon } from '../lib/useGeofencePolygon';
 import { supabase, isSupabaseConfigured, type GeofenceRow } from '../lib/supabase';
 
+// Hardcoded prototype-only gate so a casual visitor can't reshape the fence
+// by accident — this is NOT real security (it ships in the client bundle,
+// visible to anyone who opens dev tools). Replace with real auth once the
+// planned admin site exists.
+const SAVE_CODE = 'alpinetracker';
+
 export default function GeofenceEditor() {
-  const [polygon, setPolygon] = useState<LatLng[]>(DEFAULT_GEOFENCE);
+  const { polygon: loadedPolygon, updatedAt: loadedUpdatedAt, loaded } = useGeofencePolygon();
+  const [polygon, setPolygon] = useState<LatLng[]>(loadedPolygon);
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
-  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
-  // Bumped after a fresh load from Supabase so DrawControl re-seeds its
-  // layer with the loaded shape instead of the DEFAULT_GEOFENCE it mounted
-  // with (DrawControl intentionally ignores polygon prop changes otherwise).
+  const [updatedAt, setUpdatedAt] = useState<string | null>(loadedUpdatedAt);
+  // Bumped after the shared hook's first real load so DrawControl re-seeds
+  // its layer with the loaded shape instead of whatever it mounted with
+  // (DrawControl intentionally ignores polygon prop changes otherwise).
   const [loadKey, setLoadKey] = useState(0);
+  const seededRef = useRef(loaded);
+
+  const [otpOpen, setOtpOpen] = useState(false);
+  const [otpValue, setOtpValue] = useState('');
+  const [otpError, setOtpError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!supabase) return;
-    supabase
-      .from('geofences')
-      .select('*')
-      .eq('id', GEOFENCE_ID)
-      .maybeSingle()
-      .then(
-        ({ data }) => {
-          const row = data as GeofenceRow | null;
-          if (row?.polygon?.length) {
-            setPolygon(row.polygon.map(([lat, lon]) => [lat, lon]));
-            setUpdatedAt(row.updated_at);
-            setLoadKey((k) => k + 1);
-          }
-        },
-        (err: unknown) => {
-          console.error('Failed to load geofence from Supabase', err);
-        },
-      );
-  }, []);
+    if (seededRef.current || !loaded) return;
+    seededRef.current = true;
+    setPolygon(loadedPolygon);
+    setUpdatedAt(loadedUpdatedAt);
+    setLoadKey((k) => k + 1);
+  }, [loaded, loadedPolygon, loadedUpdatedAt]);
 
   const cArraySnippet = polygon
     .map(([lat, lon]) => `    {${lat.toFixed(6)}, ${lon.toFixed(6)}},`)
@@ -48,7 +46,7 @@ export default function GeofenceEditor() {
     2,
   );
 
-  async function handleSave() {
+  async function saveToSupabase() {
     if (!supabase) {
       setSaveStatus('No Supabase project configured yet — copy a snippet below instead.');
       return;
@@ -57,10 +55,7 @@ export default function GeofenceEditor() {
     // updated_at, rather than trusting a client-side clock for it.
     const { data, error } = await supabase
       .from('geofences')
-      .upsert(
-        { id: GEOFENCE_ID, name: 'Sestriere / Via Lattea', polygon },
-        { onConflict: 'id' },
-      )
+      .upsert({ id: GEOFENCE_ID, name: 'Sestriere / Via Lattea', polygon }, { onConflict: 'id' })
       .select()
       .single();
     if (error) {
@@ -69,6 +64,22 @@ export default function GeofenceEditor() {
     }
     setUpdatedAt((data as GeofenceRow).updated_at);
     setSaveStatus('Saved to Supabase.');
+  }
+
+  function handleSaveClick() {
+    setOtpValue('');
+    setOtpError(null);
+    setOtpOpen(true);
+  }
+
+  function handleOtpSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (otpValue !== SAVE_CODE) {
+      setOtpError('Incorrect code.');
+      return;
+    }
+    setOtpOpen(false);
+    saveToSupabase();
   }
 
   return (
@@ -88,7 +99,7 @@ export default function GeofenceEditor() {
         {updatedAt && ` Last updated ${new Date(updatedAt).toLocaleString()}.`}
       </p>
 
-      <MapContainer center={GEOFENCE_CENTER} zoom={13} className="map">
+      <MapContainer center={loadedPolygon[0]} zoom={13} className="map">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -97,7 +108,7 @@ export default function GeofenceEditor() {
       </MapContainer>
 
       <div className="editor-actions">
-        <button onClick={handleSave}>Save geofence</button>
+        <button onClick={handleSaveClick}>Save geofence</button>
         {saveStatus && <span className="save-status">{saveStatus}</span>}
       </div>
 
@@ -111,6 +122,33 @@ export default function GeofenceEditor() {
           <pre>{geoJson}</pre>
         </div>
       </div>
+
+      {otpOpen && (
+        <div className="modal-overlay" onClick={() => setOtpOpen(false)}>
+          <form
+            className="modal"
+            onClick={(e) => e.stopPropagation()}
+            onSubmit={handleOtpSubmit}
+          >
+            <h3>Confirm save</h3>
+            <p className="hint">Enter the prototype access code to save this geofence.</p>
+            <input
+              type="password"
+              autoFocus
+              value={otpValue}
+              onChange={(e) => setOtpValue(e.target.value)}
+              placeholder="Access code"
+            />
+            {otpError && <p className="modal-error">{otpError}</p>}
+            <div className="modal-actions">
+              <button type="button" className="secondary" onClick={() => setOtpOpen(false)}>
+                Cancel
+              </button>
+              <button type="submit">Confirm</button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

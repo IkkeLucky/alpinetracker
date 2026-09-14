@@ -8,41 +8,48 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1.25rem;
-  background: #101828;
-  color: white;
+  padding: 0.75rem 1rem;
+  background: var(--header-bg);
+  color: var(--header-text);
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.6rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .app-header h1 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   margin: 0;
+  white-space: nowrap;
 }
 
 .app-header nav {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .app-header nav button {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 0.4rem 0.9rem;
+  color: var(--header-text);
+  padding: 0.45rem 0.9rem;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
+  min-height: 38px;
 }
 
 .app-header nav button.active {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-text);
 }
 
 main {
   flex: 1;
-  padding: 1rem 1.25rem;
+  padding: 1rem 1rem 2rem;
 }
 
 .page {
@@ -63,6 +70,7 @@ main {
 
 .page-header h2 {
   margin: 0;
+  font-size: 1.3rem;
 }
 
 .badge {
@@ -70,6 +78,7 @@ main {
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .badge-supabase {
@@ -83,7 +92,7 @@ main {
 }
 
 .hint {
-  color: #475569;
+  color: var(--text-muted);
   font-size: 0.9rem;
   margin: 0;
 }
@@ -91,45 +100,74 @@ main {
 .map {
   height: 480px;
   width: 100%;
-  border-radius: 8px;
-  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
 }
 
 .fleet-table {
   width: 100%;
+  min-width: 560px;
   border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
+  background: var(--surface);
+  color: var(--text);
   font-size: 0.9rem;
 }
 
 .fleet-table th,
 .fleet-table td {
   text-align: left;
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid #eef0f2;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.fleet-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .editor-actions {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
-.editor-actions button {
-  background: #2563eb;
-  color: white;
+button {
+  font-family: inherit;
+}
+
+.editor-actions button,
+.modal-actions button[type='submit'] {
+  background: var(--primary);
+  color: var(--primary-text);
   border: none;
-  padding: 0.5rem 1.1rem;
+  padding: 0.55rem 1.2rem;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
+  min-height: 40px;
+}
+
+.editor-actions button:hover,
+.modal-actions button[type='submit']:hover {
+  filter: brightness(1.08);
 }
 
 .save-status {
   font-size: 0.85rem;
-  color: #475569;
+  color: var(--text-muted);
 }
 
 .export-grid {
@@ -153,8 +191,83 @@ main {
   max-height: 320px;
 }
 
+/* Confirm-save modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  /* Leaflet's own panes/controls use z-index up to ~1000 and, without an
+     explicit z-index of its own, .leaflet-container doesn't contain them
+     to a local stacking context — they leak into ours and will intercept
+     clicks meant for the modal unless this is comfortably higher. */
+  z-index: 10000;
+}
+
+.modal {
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.modal h3 {
+  margin: 0;
+}
+
+.modal input {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 1rem; /* >=16px avoids iOS Safari auto-zoom on focus */
+}
+
+.modal-error {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.modal-actions button.secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.55rem 1.1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  min-height: 40px;
+}
+
 @media (max-width: 700px) {
   .export-grid {
     grid-template-columns: 1fr;
+  }
+
+  .map {
+    height: 340px;
+  }
+
+  .page-header h2 {
+    font-size: 1.15rem;
   }
 }

@@ -1,16 +1,17 @@
 #include "geofence.h"
 
-// PLACEHOLDER trail-corridor polygon around Sestriere / Via Lattea
-// (center approx. 44.9558 N, 6.8789 E). These vertices are hand-picked to
-// roughly bound the resort for bench testing only — replace with the
-// actual surveyed trail-corridor polygon before any real pilot.
+// Current bench-test geofence (Turin, ~45.0703 N, 7.6855 E) — drawn in the
+// web dashboard's geofence editor and copied here by hand for now (see the
+// "known gaps" note in web/dashboard/README.md: the firmware doesn't fetch
+// this from Supabase, so a dashboard edit needs a re-copy + reflash to take
+// effect on the device). Not the real Sestriere/Via Lattea trail corridor —
+// swap in the real survey once past bench testing.
 static const GeoPoint kGeofencePolygon[] = {
-    {44.9650, 6.8650},
-    {44.9680, 6.8850},
-    {44.9600, 6.9000},
-    {44.9450, 6.8950},
-    {44.9400, 6.8700},
-    {44.9500, 6.8600},
+    {45.067253, 7.666277},
+    {45.079739, 7.674688},
+    {45.078933, 7.692773},
+    {45.067435, 7.703098},
+    {45.058341, 7.690481},
 };
 static const int kGeofencePolygonSize =
     sizeof(kGeofencePolygon) / sizeof(kGeofencePolygon[0]);

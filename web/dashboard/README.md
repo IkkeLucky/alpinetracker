@@ -44,11 +44,15 @@ Once this is wired up, the ESP32 firmware reports directly to Supabase's REST en
 
 - `src/pages/FleetMap.tsx` — live map + table of the fleet's last-known position, geofence
   status, and lock state.
-- `src/pages/GeofenceEditor.tsx` — draw/edit the trail-corridor polygon (Leaflet.draw), save to
-  Supabase, and/or copy a ready-to-paste firmware C array or GeoJSON.
+- `src/pages/GeofenceEditor.tsx` — draw/edit the trail-corridor polygon ([Geoman](https://geoman.io/)),
+  save to Supabase behind a save-code prompt, and/or copy a ready-to-paste firmware C array or
+  GeoJSON.
 - `src/lib/geofence.ts` — the same point-in-polygon check as the firmware
   (`firmware/bike-unit/src/geofence.cpp`), kept in sync by hand so "inside the zone" means the
   same thing in both places.
+- `src/lib/useGeofencePolygon.ts` — the current geofence, live from Supabase (realtime
+  subscription) with a module-level cache so switching between Fleet map and Geofence editor
+  doesn't re-fetch or flash back to the fallback polygon. Shared by both pages.
 - `src/lib/mockFleet.ts` / `useFleetReports.ts` — the no-Supabase fallback and the
   Supabase-backed live data hook.
 
@@ -59,3 +63,7 @@ Once this is wired up, the ESP32 firmware reports directly to Supabase's REST en
 - The firmware's geofence polygon and the dashboard/Supabase one are two independent copies
   right now; nothing pushes an edited geofence back down to a device. Fine for the current
   single-hardcoded-device prototype, but worth revisiting once there's more than one bike unit.
+- The "Save geofence" access code (hardcoded `alpinetracker` in `GeofenceEditor.tsx`) is **not
+  real security** — it ships in the client bundle, readable by anyone who opens dev tools. It
+  only stops a casual visitor from reshaping the fence by accident. Replace with real auth
+  (the planned admin site) before this matters for anything but a private prototype.

@@ -44,30 +44,32 @@ export default function FleetMap() {
         ))}
       </MapContainer>
 
-      <table className="fleet-table">
-        <thead>
-          <tr>
-            <th>Device</th>
-            <th>Zone</th>
-            <th>Lock</th>
-            <th>Sats</th>
-            <th>Battery</th>
-            <th>Last report</th>
-          </tr>
-        </thead>
-        <tbody>
-          {reports.map((r) => (
-            <tr key={r.device_id}>
-              <td>{r.device_id}</td>
-              <td>{r.inside_geofence ? 'inside' : 'outside'}</td>
-              <td>{r.locked ? 'locked' : 'unlocked'}</td>
-              <td>{r.satellites ?? '—'}</td>
-              <td>{r.battery ?? '—'}%</td>
-              <td>{new Date(r.reported_at).toLocaleTimeString()}</td>
+      <div className="table-scroll">
+        <table className="fleet-table">
+          <thead>
+            <tr>
+              <th>Device</th>
+              <th>Zone</th>
+              <th>Lock</th>
+              <th>Sats</th>
+              <th>Battery</th>
+              <th>Last report</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {reports.map((r) => (
+              <tr key={r.device_id}>
+                <td>{r.device_id}</td>
+                <td>{r.inside_geofence ? 'inside' : 'outside'}</td>
+                <td>{r.locked ? 'locked' : 'unlocked'}</td>
+                <td>{r.satellites ?? '—'}</td>
+                <td>{r.battery ?? '—'}%</td>
+                <td>{new Date(r.reported_at).toLocaleTimeString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
