@@ -12,10 +12,10 @@ connectivity architecture, compliance requirements, and business/funding context
 ## Repository layout
 
 ```
-firmware/bike-unit/   ESP32 firmware: GPS + local geofence evaluation + servo lock + OLED + Wi-Fi reporting
-backend/server/       Local report-ingest server (Node.js/Express) the bike unit reports to on the bench
+firmware/bike-unit/   ESP32 firmware: GPS + local geofence evaluation + servo lock + OLED + reports to Supabase
+backend/server/       Optional local report-ingest server (Node.js/Express) for offline bench testing
 web/dashboard/         Operator web app: live fleet map + geofence-polygon editor (React/Leaflet/Supabase)
-supabase/              SQL schema for the Supabase project the dashboard (and eventually the bike unit) talks to
+supabase/              SQL schema for the Supabase project the dashboard and the bike unit both talk to
 mobile/               Placeholder for the Flutter rider/operator app (not started yet)
 docs/                 Project brief and reference material
 ```
@@ -24,11 +24,14 @@ docs/                 Project brief and reference material
 
 **ESP32 proof-of-concept** — per the brief's "current prototype starting point": ESP32 reads
 GPS over UART, evaluates a trail-corridor geofence polygon locally in firmware, drives a servo
-as the lock stand-in, shows status on an OLED, and reports over Wi-Fi to a simple local server —
-buffering reports locally when Wi-Fi is unavailable and flushing them on reconnect.
+as the lock stand-in, shows status on an OLED, and reports over Wi-Fi directly to Supabase —
+buffering reports locally when Wi-Fi is unavailable and flushing the backlog on reconnect. The
+throwaway `backend/server` from the very first prototype pass still works as an offline
+alternative if you want to bench-test without touching Supabase.
 
-Status: firmware and backend scaffolding implemented; **not yet flashed/tested on real
-hardware** (needs a local machine with the ESP32 attached — see `firmware/bike-unit/README.md`).
+Status: firmware written and hand-reviewed; **not yet flashed/tested on real hardware** (needs
+a local machine with the ESP32 attached and PlatformIO able to reach its package registry —
+see `firmware/bike-unit/README.md`).
 
 **Operator web dashboard** — a fleet map (live positions, geofence status, lock state) and a
 geofence editor that draws the trail-corridor polygon on a map and exports it as a firmware C

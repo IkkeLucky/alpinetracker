@@ -22,13 +22,18 @@ export default function GeofenceEditor() {
       .select('*')
       .eq('id', GEOFENCE_ID)
       .maybeSingle()
-      .then(({ data }) => {
-        const row = data as GeofenceRow | null;
-        if (row?.polygon?.length) {
-          setPolygon(row.polygon.map(([lat, lon]) => [lat, lon]));
-          setLoadKey((k) => k + 1);
-        }
-      });
+      .then(
+        ({ data }) => {
+          const row = data as GeofenceRow | null;
+          if (row?.polygon?.length) {
+            setPolygon(row.polygon.map(([lat, lon]) => [lat, lon]));
+            setLoadKey((k) => k + 1);
+          }
+        },
+        (err: unknown) => {
+          console.error('Failed to load geofence from Supabase', err);
+        },
+      );
   }, []);
 
   const cArraySnippet = polygon

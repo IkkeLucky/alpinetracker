@@ -21,13 +21,15 @@
 // Buzzer, chirps once on every lock-state change
 #define BUZZER_PIN 25
 
-// ---- Wi-Fi / backend ---------------------------------------------------
-// Fill in for the bench network; the production device will use LTE-M/NB-IoT
-// instead, per the connectivity architecture in docs/project-brief.md.
-#define WIFI_SSID "CHANGE_ME"
-#define WIFI_PASSWORD "CHANGE_ME"
-#define SERVER_URL "http://192.168.1.100:3000/api/reports"
-#define DEVICE_ID "bike-001"
+// ---- Wi-Fi / Supabase credentials --------------------------------------
+// WIFI_SSID, WIFI_PASSWORD, SUPABASE_URL, SUPABASE_ANON_KEY, DEVICE_ID live
+// in secrets.h (gitignored) rather than here, so real credentials never end
+// up committed. Copy secrets.example.h to secrets.h and fill it in.
+// The production device will use LTE-M/NB-IoT instead of Wi-Fi, per the
+// connectivity architecture in docs/project-brief.md.
+#include "secrets.h"
+
+#define SUPABASE_REPORTS_ENDPOINT SUPABASE_URL "/rest/v1/reports"
 
 // ---- Timing --------------------------------------------------------
 #define GPS_READ_TIMEOUT_MS 1000    // how long to poll GPS UART per loop

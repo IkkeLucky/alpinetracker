@@ -32,16 +32,24 @@ export function useFleetReports(): { reports: DeviceReportRow[]; source: FleetSo
       .select('*')
       .order('reported_at', { ascending: false })
       .limit(500)
-      .then(({ data, error }) => {
-        if (cancelled || error || !data) return;
-        for (const row of data as DeviceReportRow[]) {
-          const existing = byDevice.current.get(row.device_id);
-          if (!existing || existing.reported_at < row.reported_at) {
-            byDevice.current.set(row.device_id, row);
+      .then(
+        ({ data, error }) => {
+          if (cancelled || error || !data) return;
+          for (const row of data as DeviceReportRow[]) {
+            const existing = byDevice.current.get(row.device_id);
+            if (!existing || existing.reported_at < row.reported_at) {
+              byDevice.current.set(row.device_id, row);
+            }
           }
-        }
-        setReports(Array.from(byDevice.current.values()));
-      });
+          setReports(Array.from(byDevice.current.values()));
+        },
+        (err: unknown) => {
+          // A network-level failure (offline, DNS, blocked egress) rather
+          // than a query error — log it and leave the fleet map empty
+          // rather than crash the app.
+          console.error('Failed to load reports from Supabase', err);
+        },
+      );
 
     const channel = client
       .channel('reports-realtime')

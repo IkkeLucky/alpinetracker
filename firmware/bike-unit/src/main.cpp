@@ -2,17 +2,18 @@
 //
 // Reads GPS over UART, evaluates the trail-corridor geofence locally
 // on-device (see geofence.cpp), drives a servo as the physical-lock
-// stand-in, shows live status on an OLED, and reports over Wi-Fi to the
-// bench backend — buffering reports locally (report_buffer.h) whenever
-// Wi-Fi is down and flushing the backlog once it's back, which is the
-// store-and-forward behavior the real cellular/LoRaWAN device needs for
-// dead zones.
+// stand-in, shows live status on an OLED, and reports over Wi-Fi directly
+// to Supabase's REST API (PostgREST) — buffering reports locally
+// (report_buffer.h) whenever Wi-Fi is down and flushing the backlog once
+// it's back, which is the store-and-forward behavior the real
+// cellular/LoRaWAN device needs for dead zones.
 //
 // NOT YET FLASHED/TESTED ON HARDWARE. See README.md for wiring and the
 // bench checklist.
 
 #include <Arduino.h>
 #include <WiFi.h>
+#include <WiFiClientSecure.h>
 #include <HTTPClient.h>
 #include <Wire.h>
 #include <TinyGPSPlus.h>
@@ -109,17 +110,33 @@ static void tryFlushBuffer() {
   if (reportBuffer.isEmpty()) return;
   if (WiFi.status() != WL_CONNECTED) return;
 
+  // PostgREST bulk-inserts a JSON array as a single statement: it's all
+  // rows or none, unlike the old bench server's per-item accept/reject. A
+  // malformed batch (e.g. an unregistered device_id — see schema.sql) fails
+  // outright and keeps retrying every FLUSH_INTERVAL_MS rather than
+  // silently dropping data, which is the right failure mode here: better
+  // to keep buffering (and eventually drop the *oldest* points once full)
+  // than to lose a whole backlog to one bad request.
+  //
+  // setInsecure() skips TLS certificate validation — the connection is
+  // still encrypted, but not authenticated, so this is fine for a bench
+  // prototype and not something to carry into a real deployment (pin
+  // Supabase's root CA with setCACert() instead).
+  WiFiClientSecure client;
+  client.setInsecure();
   HTTPClient http;
-  http.begin(SERVER_URL);
+  http.begin(client, SUPABASE_REPORTS_ENDPOINT);
   http.addHeader("Content-Type", "application/json");
+  http.addHeader("apikey", SUPABASE_ANON_KEY);
+  http.addHeader("Authorization", "Bearer " SUPABASE_ANON_KEY);
+  http.addHeader("Prefer", "return=minimal");
   int statusCode = http.POST(reportBuffer.toJsonArray());
   http.end();
 
-  // 201 = server accepted everything, 207 = accepted some (bad ones logged
-  // server-side and dropped either way — a malformed report isn't worth
-  // holding up the whole backlog for).
-  if (statusCode == 201 || statusCode == 207) {
+  if (statusCode == 201) {
     reportBuffer.clear();
+  } else {
+    Serial.printf("Supabase report flush failed, status %d\n", statusCode);
   }
 }
 

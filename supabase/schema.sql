@@ -47,12 +47,31 @@ alter table geofences enable row level security;
 -- auth-scoped policies (e.g. device API keys for inserts, operator auth for
 -- the dashboard) before any GDPR-relevant pilot with real riders' location
 -- data — see the Compliance section of docs/project-brief.md.
+-- (drop-then-create makes this whole script safe to re-run as it evolves)
+drop policy if exists "anon full access" on devices;
 create policy "anon full access" on devices for all using (true) with check (true);
+drop policy if exists "anon full access" on reports;
 create policy "anon full access" on reports for all using (true) with check (true);
+drop policy if exists "anon full access" on geofences;
 create policy "anon full access" on geofences for all using (true) with check (true);
 
 -- Lets the dashboard subscribe to new reports in real time.
-alter publication supabase_realtime add table reports;
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'reports'
+  ) then
+    alter publication supabase_realtime add table reports;
+  end if;
+end $$;
+
+-- Seed the bench device. The firmware's device_id (DEVICE_ID in
+-- firmware/bike-unit/include/secrets.h) must have a matching row here —
+-- reports.device_id is a foreign key, so an unregistered device's inserts
+-- fail outright. Add one row per real bike unit as you bring them online.
+insert into devices (id, name) values ('bike-001', 'Bike 001 (bench prototype)')
+  on conflict (id) do nothing;
 
 -- Seed the placeholder Sestriere / Via Lattea polygon so the dashboard has
 -- something to show immediately. Replace with real surveyed coordinates
