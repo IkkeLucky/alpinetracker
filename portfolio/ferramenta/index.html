@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Bottega Ferri — Ferramenta</title>
+  <meta name="description" content="Ferramenta Bottega Ferri: utensili, elettroutensili e viteria con ritiro al banco in 30 minuti o consegna in giornata. Kit su misura e taglio legno online.">
+  <meta name="theme-color" content="#121211">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Saracinesca: la serranda che si alza all'apertura -->
+  <div class="shutter" id="shutter" aria-hidden="true">
+    <div class="shutter__slats"></div>
+    <div class="shutter__handle"></div>
+    <div class="shutter__sign"><span>APERTO</span></div>
+    <div class="shutter__hint">Bottega Ferri · dal 1958</div>
+  </div>
+
+  <!-- Metro a nastro: avanzamento dello scroll -->
+  <div class="tape" aria-hidden="true">
+    <div class="tape__blade" id="tapeBlade"></div>
+    <div class="tape__readout" id="tapeReadout">0 cm</div>
+  </div>
+
+  <div class="proto-banner" role="note">
+    <span class="dot"></span> Prototipo<span class="pb-long"> dimostrativo · nessun pagamento reale</span>
+  </div>
+
+  <div class="cursor" id="cursor" aria-hidden="true"><i></i></div>
+
+  <header class="nav" id="nav">
+    <a href="#top" class="brand" aria-label="Bottega Ferri, torna su">
+      <span class="brand__mark">BF</span>
+      <span class="brand__name">Bottega<br>Ferri</span>
+    </a>
+    <nav class="nav__links" aria-label="Principale">
+      <a href="#reparti">Reparti</a>
+      <a href="#bancone">Negozio</a>
+      <a href="#su-misura">Su misura</a>
+      <a href="#officina">Officina</a>
+      <a href="#bottega">La bottega</a>
+    </nav>
+    <div class="nav__actions">
+      <span class="open-now" id="openNow"><i></i><b>—</b></span>
+      <button class="cart-btn" id="cartBtn" aria-label="Apri il carrello">
+        <span class="cart-btn__label">Carrello</span>
+        <span class="cart-btn__count" id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero__media">
+        <img class="hero__img ph" data-img="uqh5Pbv0d4s" data-w="2200" alt="Un laboratorio buio pieno di attrezzi e legno">
+        <div class="hero__torch" id="torch"></div>
+        <div class="hero__grain"></div>
+      </div>
+      <div class="hero__content">
+        <p class="eyebrow mono"><span class="eyebrow__num">N°01</span> Ferramenta di quartiere · Bergamo</p>
+        <h1 class="hero__title" id="heroTitle">
+          <span class="line"><span class="w">Attrezzi</span> <em class="serif">veri,</em></span>
+          <span class="line"><span class="w">pronti</span> <span class="w accent">oggi.</span></span>
+        </h1>
+        <p class="hero__lead">Ordina dal telefono in un minuto. Lo prepariamo al banco in 30 minuti, oppure arriva a casa tua o in cantiere entro sera.</p>
+        <div class="hero__cta">
+          <a href="#bancone" class="btn btn--hazard"><span>Entra in negozio</span><i class="btn__arrow"></i></a>
+          <a href="#su-misura" class="btn btn--ghost"><span>Componi il tuo kit</span></a>
+        </div>
+      </div>
+      <ul class="hero__specs mono">
+        <li><b data-count="30">0</b><span>min · ritiro al banco</span></li>
+        <li><b data-count="15">0</b><span>km · consegna in giornata</span></li>
+        <li><b data-count="12000">0</b><span>articoli a magazzino</span></li>
+      </ul>
+      <div class="hero__scroll mono">Scorri <span></span></div>
+    </section>
+
+    <!-- NASTRO DI CANTIERE -->
+    <section class="caution" aria-label="Servizi in breve">
+      <div class="caution__tape caution__tape--a"><div class="caution__track" data-marquee>
+        <span>Consegna in giornata</span><span>Ritiro al banco in 30 min</span><span>Ritiro in auto</span><span>Duplicazione chiavi</span><span>Taglio legno su misura</span><span>Affilatura</span>
+      </div></div>
+      <div class="caution__tape caution__tape--b"><div class="caution__track" data-marquee data-dir="-1">
+        <span>Attenzione: prezzi da ferramenta, non da centro commerciale</span><span>Consiglio gratis al banco</span><span>Attenzione: prezzi da ferramenta, non da centro commerciale</span>
+      </div></div>
+    </section>
+
+    <!-- CASSETTIERA / REPARTI -->
+    <section class="drawers" id="reparti">
+      <div class="section-head">
+        <p class="eyebrow mono"><span class="eyebrow__num">N°02</span> Reparti</p>
+        <h2 class="h2">Apri un <em class="serif">cassetto.</em></h2>
+        <p class="section-head__lead">Come al banco: ogni cassetto ha la sua etichetta. Tira la maniglia e trovi quello che cerchi.</p>
+      </div>
+      <div class="cabinet" id="cabinet">
+        <!-- generati in JS -->
+      </div>
+    </section>
+
+    <!-- NEGOZIO -->
+    <section class="shop" id="bancone">
+      <div class="section-head section-head--row">
+        <div>
+          <p class="eyebrow mono"><span class="eyebrow__num">N°03</span> Il bancone</p>
+          <h2 class="h2">Sul banco <em class="serif">oggi.</em></h2>
+        </div>
+        <div class="filters" id="filters" role="tablist" aria-label="Filtra per reparto"></div>
+      </div>
+      <div class="products" id="products"></div>
+    </section>
+
+    <!-- CONFIGURATORE -->
+    <section class="config" id="su-misura">
+      <div class="config__bg">
+        <img class="ph" data-img="WWLuyDP3t1U" data-w="2000" alt="" aria-hidden="true">
+      </div>
+      <div class="section-head">
+        <p class="eyebrow mono"><span class="eyebrow__num">N°04</span> Su misura</p>
+        <h2 class="h2 h2--light">Fatto <em class="serif">per te,</em><br>pronto al banco.</h2>
+      </div>
+
+      <div class="tabs mono" role="tablist">
+        <button class="tab is-active" role="tab" aria-selected="true" data-tab="kit">01 · Kit in valigetta</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="cut">02 · Taglio legno</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="key">03 · Chiavi</button>
+      </div>
+
+      <!-- KIT -->
+      <div class="panel is-active" data-panel="kit">
+        <div class="kit">
+          <div class="kit__stage">
+            <div class="case" id="case" data-case="metal">
+              <div class="case__lid">
+                <div class="plate" id="plate"><span id="plateText">IL TUO NOME</span></div>
+              </div>
+              <div class="case__body">
+                <div class="foam" id="foam"></div>
+              </div>
+              <div class="case__latch case__latch--l"></div>
+              <div class="case__latch case__latch--r"></div>
+            </div>
+            <p class="kit__hint mono">Le sagome nella gommapiuma si riempiono mentre scegli gli attrezzi.</p>
+          </div>
+
+          <div class="kit__controls">
+            <fieldset class="step">
+              <legend class="mono"><b>A</b> Valigetta</legend>
+              <div class="choices" id="caseChoices"></div>
+            </fieldset>
+            <fieldset class="step">
+              <legend class="mono"><b>B</b> Attrezzi <small id="slotInfo">0 / 9 sagome</small></legend>
+              <div class="toolpick" id="toolPick"></div>
+            </fieldset>
+            <fieldset class="step">
+              <legend class="mono"><b>C</b> Incisione laser sulla targhetta <small>+ € 5</small></legend>
+              <label class="engrave">
+                <input type="text" id="engraveInput" maxlength="18" placeholder="Es. Impresa Rota" autocomplete="off">
+                <span class="mono" id="engraveCount">0/18</span>
+              </label>
+            </fieldset>
+            <div class="summary">
+              <div>
+                <span class="mono summary__label">Totale kit</span>
+                <span class="summary__save mono" id="kitSave"></span>
+              </div>
+              <div class="odometer" id="kitTotal" aria-live="polite"></div>
+              <button class="btn btn--hazard btn--block" id="kitAdd"><span>Aggiungi il kit al carrello</span><i class="btn__arrow"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAGLIO -->
+      <div class="panel" data-panel="cut" hidden>
+        <div class="cut">
+          <div class="cut__stage">
+            <div class="board-wrap" id="boardWrap">
+              <div class="dim dim--w"><span id="dimW">120 cm</span></div>
+              <div class="dim dim--h"><span id="dimH">60 cm</span></div>
+              <div class="sheet-ghost" id="sheetGhost">
+                <span class="mono">Pannello intero 244 × 122</span>
+                <div class="board" id="board" data-mat="betulla">
+                  <div class="board__saw" id="saw"></div>
+                  <div class="board__dust" id="dust"></div>
+                </div>
+              </div>
+            </div>
+            <p class="kit__hint mono">Anteprima in scala · lama da 3 mm · tolleranza ± 1 mm</p>
+          </div>
+          <div class="kit__controls">
+            <fieldset class="step">
+              <legend class="mono"><b>A</b> Materiale</legend>
+              <div class="choices" id="matChoices"></div>
+            </fieldset>
+            <fieldset class="step">
+              <legend class="mono"><b>B</b> Misure</legend>
+              <label class="range"><span>Larghezza</span><input type="range" id="cutW" min="10" max="244" value="120"><output class="mono" id="cutWOut">120 cm</output></label>
+              <label class="range"><span>Altezza</span><input type="range" id="cutH" min="10" max="122" value="60"><output class="mono" id="cutHOut">60 cm</output></label>
+              <div class="seg mono" id="thick">
+                <button data-t="12">12 mm</button><button data-t="18" class="is-active">18 mm</button><button data-t="25">25 mm</button>
+              </div>
+            </fieldset>
+            <fieldset class="step">
+              <legend class="mono"><b>C</b> Pezzi</legend>
+              <div class="qty" id="cutQty"><button data-d="-1" aria-label="Meno">−</button><span class="mono">1</span><button data-d="1" aria-label="Più">+</button></div>
+            </fieldset>
+            <div class="summary">
+              <div><span class="mono summary__label">Totale taglio</span><span class="summary__save mono" id="cutInfo"></span></div>
+              <div class="odometer" id="cutTotal" aria-live="polite"></div>
+              <button class="btn btn--hazard btn--block" id="cutAdd"><span>Taglia e aggiungi</span><i class="btn__arrow"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHIAVI -->
+      <div class="panel" data-panel="key" hidden>
+        <div class="cut">
+          <div class="cut__stage">
+            <div class="keyprev" id="keyPrev">
+              <div class="key" id="keyShape">
+                <div class="key__bow"><span class="key__hole"></span><span class="key__tag mono" id="keyTag">FERRI</span></div>
+                <div class="key__blade"><i></i><i></i><i></i><i></i><i></i></div>
+              </div>
+              <div class="keycount mono" id="keyCount">× 1</div>
+            </div>
+            <p class="kit__hint mono">Carica una foto della chiave al checkout: la confrontiamo con il grezzo prima di tagliare.</p>
+          </div>
+          <div class="kit__controls">
+            <fieldset class="step">
+              <legend class="mono"><b>A</b> Tipo di chiave</legend>
+              <div class="choices" id="keyTypes"></div>
+            </fieldset>
+            <fieldset class="step">
+              <legend class="mono"><b>B</b> Colore testa</legend>
+              <div class="swatches" id="keyColors"></div>
+            </fieldset>
+            <fieldset class="step">
+              <legend class="mono"><b>C</b> Copie</legend>
+              <div class="qty" id="keyQty"><button data-d="-1" aria-label="Meno">−</button><span class="mono">1</span><button data-d="1" aria-label="Più">+</button></div>
+            </fieldset>
+            <div class="summary">
+              <div><span class="mono summary__label">Totale duplicati</span><span class="summary__save mono">Pronte in 10 minuti</span></div>
+              <div class="odometer" id="keyTotal" aria-live="polite"></div>
+              <button class="btn btn--hazard btn--block" id="keyAdd"><span>Aggiungi i duplicati</span><i class="btn__arrow"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OFFICINA: scintille -->
+    <section class="workshop" id="officina">
+      <div class="workshop__media">
+        <img class="ph" data-img="PUt8zeqbMmk" data-w="1800" alt="Una persona usa una smerigliatrice su un pezzo di metallo">
+        <canvas id="sparks" aria-hidden="true"></canvas>
+      </div>
+      <div class="workshop__text">
+        <p class="eyebrow mono"><span class="eyebrow__num">N°05</span> Officina sul retro</p>
+        <h2 class="h2 h2--light">Lo affiliamo,<br>lo ripariamo,<br><em class="serif">te lo ridiamo.</em></h2>
+        <ol class="services">
+          <li><span class="mono">01</span><div><b>Affilatura</b><p>Lame, catene motosega, forbici da potatura. In 24 ore.</p></div><span class="mono price">da € 6</span></li>
+          <li><span class="mono">02</span><div><b>Riparazione elettroutensili</b><p>Preventivo gratuito, ricambi originali.</p></div><span class="mono price">preventivo</span></li>
+          <li><span class="mono">03</span><div><b>Noleggio attrezzi</b><p>Demolitore, carotatrice, tagliapiastrelle. Anche a ore.</p></div><span class="mono price">da € 18/g</span></li>
+          <li><span class="mono">04</span><div><b>Colori tintometrici</b><p>Smalti e idropitture miscelati al momento.</p></div><span class="mono price">al banco</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- AVVISI ORDINE -->
+    <section class="alerts" id="avvisi">
+      <div class="alerts__text">
+        <p class="eyebrow mono"><span class="eyebrow__num">N°06</span> Per il negoziante</p>
+        <h2 class="h2">Ogni ordine,<br><em class="serif">subito</em> in tasca.</h2>
+        <p class="section-head__lead">Quando un cliente ordina, al banco arriva un messaggio WhatsApp o SMS con articoli, orario di ritiro e telefono. Un tocco su <b>“Pronto”</b> e il cliente riceve l'avviso.</p>
+        <ul class="ticks">
+          <li>Nessun abbonamento mensile alla piattaforma</li>
+          <li>Opzioni personalizzate che i marketplace non permettono</li>
+          <li>Checkout da telefono in meno di 60 secondi</li>
+        </ul>
+        <button class="btn btn--dark" id="demoAlert"><span>Simula un ordine in arrivo</span><i class="btn__arrow"></i></button>
+      </div>
+      <div class="phone" id="phone" aria-label="Anteprima notifiche sul telefono del negozio">
+        <div class="phone__notch"></div>
+        <div class="phone__screen">
+          <div class="phone__status mono"><span id="phoneClock">08:30</span><span>●●● 5G</span></div>
+          <div class="chat">
+            <div class="chat__head"><span class="chat__avatar">BF</span><div><b>Ordini Bottega</b><small>bot ordini · online</small></div></div>
+            <div class="chat__body" id="chatBody">
+              <div class="bubble bubble--in"><b>Ordine #1039</b><br>2× Viti inox 4×40 · 1× Silicone<br>Ritiro: 09:15 · Marco R.<span class="bubble__time mono">08:12</span></div>
+              <div class="bubble bubble--out">✓ Pronto al banco<span class="bubble__time mono">08:31 ✓✓</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LA BOTTEGA -->
+    <section class="story" id="bottega">
+      <div class="story__strip" id="storyStrip">
+        <figure class="story__card story__card--tall"><img class="ph" data-img="t5YUoHW6zRo" data-w="1200" alt="Attrezzi appesi a una rastrelliera"><figcaption class="mono">Parete 3 · utensili manuali</figcaption></figure>
+        <div class="story__copy">
+          <p class="eyebrow mono"><span class="eyebrow__num">N°07</span> La bottega</p>
+          <h2 class="h2">Tre generazioni<br>dietro <em class="serif">lo stesso banco.</em></h2>
+          <p>Nonno Aldo vendeva chiodi a peso. Oggi vendiamo anche online, ma il consiglio resta gratis: se non sai quale tassello usare, chiedi. Rispondiamo noi, non un call center.</p>
+          <p class="signature serif">— Giulia, Paolo e Aldo Ferri</p>
+        </div>
+        <figure class="story__card"><img class="ph" data-img="ghA-a084LJ4" data-w="1200" alt="Un laboratorio pieno di oggetti e attrezzi"><figcaption class="mono">Il retrobottega</figcaption></figure>
+        <figure class="story__card story__card--tall"><img class="ph" data-img="pHkL5NKscwU" data-w="1200" alt="Un uomo lavora un pezzo di legno"><figcaption class="mono">Taglio su misura</figcaption></figure>
+        <figure class="story__card"><img class="ph" data-img="LjnP00C93Co" data-w="1200" alt="Un mucchio di viti e dadi su un tavolo"><figcaption class="mono">Viteria sfusa, anche 1 pezzo</figcaption></figure>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer__grid">
+      <div>
+        <p class="mono footer__label">Indirizzo</p>
+        <p>Via dei Fabbri 14<br>24121 Bergamo (BG)</p>
+      </div>
+      <div>
+        <p class="mono footer__label">Orari</p>
+        <p>Lun–Ven 8:00–12:30 · 14:30–19:00<br>Sab 8:00–12:30</p>
+      </div>
+      <div>
+        <p class="mono footer__label">Contatti</p>
+        <p>035 000 0000<br>ciao@bottegaferri.it</p>
+      </div>
+      <div>
+        <p class="mono footer__label">Prototipo</p>
+        <p>Demo frontend. Pagamenti e notifiche reali si attivano con il backend.</p>
+      </div>
+    </div>
+    <div class="footer__word" aria-hidden="true">BOTTEGA FERRI</div>
+    <p class="footer__credit mono">Attività fittizia a scopo dimostrativo · Foto: Unsplash</p>
+  </footer>
+
+  <!-- CARRELLO -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" aria-label="Carrello" aria-hidden="true">
+    <div class="drawer__head">
+      <h3>Il tuo sacchetto</h3>
+      <button class="icon-btn" data-close aria-label="Chiudi">✕</button>
+    </div>
+    <div class="drawer__body" id="cartList"></div>
+    <div class="drawer__foot">
+      <div class="freebar"><div class="freebar__fill" id="freeFill"></div><span class="mono" id="freeText"></span></div>
+      <div class="drawer__total"><span>Totale</span><b id="cartTotal">€ 0,00</b></div>
+      <button class="btn btn--hazard btn--block" id="toCheckout"><span>Vai al checkout</span><i class="btn__arrow"></i></button>
+    </div>
+  </aside>
+
+  <!-- CHECKOUT -->
+  <div class="sheet" id="sheet" aria-hidden="true" role="dialog" aria-label="Checkout">
+    <div class="sheet__grip"></div>
+    <div class="sheet__head">
+      <button class="icon-btn" id="sheetBack" aria-label="Indietro">←</button>
+      <ol class="steps mono" id="steps"><li class="is-on">Ritiro</li><li>Contatti</li><li>Pagamento</li></ol>
+      <button class="icon-btn" data-close aria-label="Chiudi">✕</button>
+    </div>
+    <form class="sheet__body" id="checkoutForm" novalidate>
+      <div class="cstep is-on" data-step="0">
+        <h4>Come lo vuoi?</h4>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="mode" value="banco" checked><span><b>Ritiro al banco</b><small>Pronto in 30 min · gratis</small></span><i>0 €</i></label>
+          <label class="opt"><input type="radio" name="mode" value="auto"><span><b>Ritiro in auto</b><small>Te lo portiamo al bagagliaio · gratis</small></span><i>0 €</i></label>
+          <label class="opt"><input type="radio" name="mode" value="consegna"><span><b>Consegna in giornata</b><small>Entro 15 km · gratis sopra 79 €</small></span><i id="shipFee">4,90 €</i></label>
+        </div>
+        <h4>Quando?</h4>
+        <div class="slots" id="slots"></div>
+      </div>
+      <div class="cstep" data-step="1">
+        <h4>Chi passa a ritirare?</h4>
+        <label class="field"><span>Nome</span><input name="name" autocomplete="name" placeholder="Mario Rossi" required></label>
+        <label class="field"><span>Telefono</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="333 123 4567" required></label>
+        <label class="field field--addr" hidden><span>Indirizzo di consegna</span><input name="addr" autocomplete="street-address" placeholder="Via, civico, citofono"></label>
+        <label class="field"><span>Note per il banco <small>(facoltative)</small></span><input name="note" placeholder="Es. mi serve anche la punta da 6"></label>
+        <label class="check"><input type="checkbox" name="wa" checked><span>Avvisami su WhatsApp quando è pronto</span></label>
+      </div>
+      <div class="cstep" data-step="2">
+        <h4>Pagamento</h4>
+        <button type="button" class="paybtn" data-pay="wallet"><span class="paybtn__chip"></span>Paga con il telefono</button>
+        <div class="or mono">oppure</div>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="pay" value="carta" checked><span><b>Carta</b><small>Visa, Mastercard, Maestro</small></span></label>
+          <label class="opt"><input type="radio" name="pay" value="banco"><span><b>Paga al ritiro</b><small>Contanti, bancomat o satispay</small></span></label>
+        </div>
+        <div class="card-fields" id="cardFields">
+          <label class="field"><span>Numero carta</span><input inputmode="numeric" placeholder="4242 4242 4242 4242" autocomplete="cc-number" id="ccNum"></label>
+          <div class="field-row">
+            <label class="field"><span>Scadenza</span><input inputmode="numeric" placeholder="12/28" autocomplete="cc-exp"></label>
+            <label class="field"><span>CVC</span><input inputmode="numeric" placeholder="123" autocomplete="cc-csc"></label>
+          </div>
+        </div>
+        <div class="recap" id="recap"></div>
+      </div>
+    </form>
+    <div class="sheet__foot">
+      <button class="btn btn--hazard btn--block" id="sheetNext"><span>Continua</span><i class="btn__arrow"></i></button>
+    </div>
+  </div>
+
+  <!-- CONFERMA: scontrino -->
+  <div class="receipt-wrap" id="receiptWrap" aria-hidden="true">
+    <div class="printer">
+      <div class="printer__slot"></div>
+      <div class="receipt" id="receipt"></div>
+    </div>
+    <button class="btn btn--hazard" id="receiptClose"><span>Torna al negozio</span></button>
+  </div>
+
+  <!-- notifica -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Vista negoziante -->
+  <button class="owner-fab mono" id="ownerFab" aria-label="Vista negoziante">Lato negozio <span id="ownerBadge">0</span></button>
+  <aside class="owner" id="owner" aria-hidden="true" aria-label="Vista negoziante">
+    <div class="drawer__head">
+      <h3>Ordini di oggi</h3>
+      <button class="icon-btn" data-close aria-label="Chiudi">✕</button>
+    </div>
+    <p class="owner__note mono">Simulazione: con il backend gli ordini arrivano qui e su WhatsApp in tempo reale.</p>
+    <div class="owner__list" id="ownerList"></div>
+  </aside>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
