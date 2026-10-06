@@ -217,15 +217,6 @@ main { display: block; overflow-x: clip; }
 .oven-tag { position: absolute; left: 50%; bottom: -.4rem; transform: translateX(-50%); display: flex; gap: .4rem; flex-wrap: wrap; justify-content: center; }
 .oven-tag span { font: 500 .72rem var(--f-mono); padding: .25rem .6rem; border-radius: 999px; background: var(--card); border: 1px solid var(--line); white-space: nowrap; }
 
-/* nastro */
-.ribbon {
-  position: relative; z-index: 4; margin-block: clamp(16px, 3vw, 32px) 0; transform: rotate(-1.4deg);
-  background: linear-gradient(180deg, #E1BE6E 0%, #CDA24C 45%, #B98B36 100%);
-  color: #2A1B12; overflow: hidden; border-block: 2px solid #A57A2C; box-shadow: 0 10px 24px -14px rgba(0, 0, 0, .5);
-}
-.ribbon__track { display: flex; width: max-content; gap: 1.6rem; padding-block: .85rem; animation: marquee 42s linear infinite; }
-.ribbon span { font: 500 .82rem var(--f-mono); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
-.ribbon i { font-style: normal; opacity: .6; }
 
 /* ───────────── sfornate ───────────── */
 .bakes__rail {
@@ -719,7 +710,6 @@ dialog.is-closing::backdrop { animation: fade .22s reverse forwards; }
 @keyframes emberBlink { from { opacity: .45; } to { opacity: 1; } }
 @keyframes ember { 0% { box-shadow: 0 0 0 0 rgba(229, 96, 42, .55); } 70% { box-shadow: 0 0 0 8px rgba(229, 96, 42, 0); } 100% { box-shadow: 0 0 0 0 rgba(229, 96, 42, 0); } }
 @keyframes pulse { 50% { opacity: .35; } }
-@keyframes marquee { to { transform: translateX(-50%); } }
 @keyframes swing { 0% { transform: rotate(4deg); } 20% { transform: rotate(-12deg); } 40% { transform: rotate(9deg); } 60% { transform: rotate(-5deg); } 80% { transform: rotate(3deg); } 100% { transform: rotate(4deg); } }
 @keyframes artSteam { 0% { stroke-dashoffset: 138; opacity: 0; } 25% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
 @keyframes score { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
@@ -828,6 +818,5 @@ dialog.is-closing::backdrop { animation: fade .22s reverse forwards; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-  .ribbon__track { animation: none; }
   .steam, .art__steam { display: none; }
 }
