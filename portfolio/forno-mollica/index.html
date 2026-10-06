@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mollica Forno e Pasticceria</title>
+<meta name="description" content="Pane a lievito madre, lievitati e torte su misura. Ordina dal telefono, ritira caldo al bancone o ricevi in bici. Torino.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Hanken+Grotesk:ital,wght@0,400..750;1,400..600&family=IBM+Plex+Mono:wght@400;500;600&family=Pinyon+Script&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="demo-bar" role="note">
+  <span class="demo-bar__dot" aria-hidden="true"></span>
+  <p><strong>Prototipo dimostrativo.</strong> Ordini, pagamenti e notifiche sono simulati. Fai un ordine e guarda l'avviso arrivare al forno.</p>
+  <button class="demo-bar__btn" type="button" data-open-owner>Apri vista titolare</button>
+</div>
+
+<header class="nav" id="top">
+  <a class="logo" href="#top" aria-label="Mollica, torna su">
+    <span class="logo__script">Mollica</span>
+    <span class="logo__sub">Forno · Pasticceria · Torino</span>
+  </a>
+  <nav class="nav__links" aria-label="Sezioni">
+    <a href="#sfornate">Sfornate</a>
+    <a href="#bancone">Il bancone</a>
+    <a href="#torte">Torte su misura</a>
+    <a href="#lievito">48 ore</a>
+    <a href="#orari">Orari</a>
+  </nav>
+  <div class="nav__actions">
+    <button class="icon-btn owner-btn" type="button" data-open-owner aria-label="Vista titolare: ordini ricevuti">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+      <span class="badge" id="ownerBadge" hidden>0</span>
+    </button>
+    <button class="bag-btn" type="button" id="bagBtn" aria-label="Apri il sacchetto">
+      <svg class="bag-btn__icon" viewBox="0 0 40 44" aria-hidden="true">
+        <path class="bag-paper" d="M6 12h28l-2.2 28.5a2 2 0 0 1-2 1.5H10.2a2 2 0 0 1-2-1.5L6 12Z"/>
+        <path class="bag-fold" d="M6 12l3-6h22l3 6"/>
+        <path class="bag-handle" d="M14 16v-3a6 6 0 0 1 12 0v3"/>
+      </svg>
+      <span class="bag-btn__label">Sacchetto</span>
+      <span class="bag-btn__count" id="bagCount">0</span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ───────────────────────── HERO ───────────────────────── -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <canvas class="hero__flour" id="flour" aria-hidden="true"></canvas>
+    <div class="hero__copy">
+      <p class="eyebrow">Lievito madre · grani antichi piemontesi</p>
+      <h1 id="heroTitle" class="hero__title">
+        <span class="line">Sfornato alle <em class="clock">6:40</em>.</span>
+        <span class="line">Nel tuo sacchetto</span>
+        <span class="line">alle <em class="clock">7:00</em>.</span>
+      </h1>
+      <p class="hero__lede">Ordina dal telefono pane, lievitati e torte su misura. Lo ritiri ancora caldo al bancone, oppure te lo portiamo in bici cargo entro 3&nbsp;km.</p>
+      <div class="hero__cta">
+        <a class="btn btn--ink" href="#bancone">Ordina per il ritiro</a>
+        <a class="btn btn--line" href="#torte">Componi la tua torta</a>
+      </div>
+      <p class="live-chip" id="nextBake" aria-live="polite">
+        <span class="live-chip__dot" aria-hidden="true"></span>
+        <span id="nextBakeText">Prossima sfornata: Focaccia genovese alle 08:15</span>
+      </p>
+    </div>
+
+    <figure class="hero__oven" aria-label="Una pagnotta che lievita e si colora dentro il forno a legna">
+      <svg viewBox="0 0 520 500" class="oven" role="img" aria-hidden="true">
+        <defs>
+          <radialGradient id="ovenGlow" cx="50%" cy="78%" r="65%">
+            <stop offset="0" stop-color="#FFB45C" stop-opacity=".95"/>
+            <stop offset=".35" stop-color="#E5602A" stop-opacity=".55"/>
+            <stop offset=".75" stop-color="#3A120A" stop-opacity=".2"/>
+            <stop offset="1" stop-color="#140806" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="loafGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop class="loaf-top" offset="0"/>
+            <stop class="loaf-mid" offset=".55"/>
+            <stop class="loaf-bot" offset="1"/>
+          </linearGradient>
+          <linearGradient id="peelGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#D9A86A"/>
+            <stop offset="1" stop-color="#A86F36"/>
+          </linearGradient>
+          <clipPath id="mouthClip"><path d="M110 430V250a150 150 0 0 1 300 0v180Z"/></clipPath>
+          <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>
+        </defs>
+
+        <!-- dome -->
+        <path class="oven__dome" d="M30 470V250C30 118 132 26 260 26S490 118 490 250v220Z"/>
+        <g class="oven__tiles" aria-hidden="true"></g>
+        <!-- voussoirs -->
+        <g class="oven__arch" id="ovenArch"></g>
+        <!-- mouth -->
+        <path d="M110 430V250a150 150 0 0 1 300 0v180Z" fill="#170A07"/>
+        <g clip-path="url(#mouthClip)">
+          <ellipse class="oven__glow" cx="260" cy="400" rx="230" ry="190" fill="url(#ovenGlow)"/>
+          <g class="embers">
+            <circle cx="150" cy="412" r="5"/><circle cx="172" cy="418" r="3.5"/><circle cx="360" cy="414" r="4.5"/>
+            <circle cx="383" cy="420" r="3"/><circle cx="140" cy="424" r="3"/><circle cx="372" cy="424" r="3.5"/>
+          </g>
+          <!-- floor -->
+          <rect x="110" y="410" width="300" height="30" fill="#2A140D"/>
+          <!-- loaf -->
+          <g class="loaf">
+            <ellipse cx="260" cy="410" rx="98" ry="10" fill="#000" opacity=".45" filter="url(#soft)"/>
+            <path class="loaf__body" d="M166 408c-6-62 40-106 94-106s100 44 94 106c-30 8-158 8-188 0Z" fill="url(#loafGrad)"/>
+            <path class="loaf__ear" d="M196 352c26-30 84-42 128-20-38-2-86 6-128 20Z"/>
+            <path class="loaf__score" d="M196 352c40-16 92-22 128-20"/>
+            <g class="loaf__flour">
+              <circle cx="232" cy="318" r="1.6"/><circle cx="252" cy="312" r="1.2"/><circle cx="276" cy="314" r="1.8"/>
+              <circle cx="296" cy="322" r="1.3"/><circle cx="220" cy="330" r="1.1"/><circle cx="310" cy="334" r="1.5"/>
+              <circle cx="262" cy="322" r="1"/><circle cx="244" cy="326" r="1.4"/>
+            </g>
+          </g>
+        </g>
+        <!-- steam -->
+        <g class="steam" fill="none">
+          <path d="M232 296c-14-22 14-34 0-58s12-36 0-56"/>
+          <path d="M262 288c-14-22 14-34 0-58s12-36 0-56"/>
+          <path d="M292 296c-14-22 14-34 0-58s12-36 0-56"/>
+        </g>
+        <!-- peel -->
+        <path class="peel" d="M168 432h184l14 10H154Z" fill="url(#peelGrad)"/>
+        <rect class="peel" x="246" y="440" width="28" height="60" rx="6" fill="url(#peelGrad)"/>
+      </svg>
+      <figcaption class="oven-tag">
+        <span>250&nbsp;°C</span><span>pietra refrattaria</span><span>45&nbsp;min</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ribbon -->
+  <div class="ribbon" aria-hidden="true">
+    <div class="ribbon__track">
+      <span>Lievito madre dal 1987</span><i>✦</i><span>48 ore di fermentazione</span><i>✦</i><span>Ritiro dalle 7:00</span><i>✦</i><span>Consegna in bici cargo entro 3 km</span><i>✦</i><span>Torte su misura con 48 ore di preavviso</span><i>✦</i><span>Grissini stirati a mano</span><i>✦</i>
+      <span>Lievito madre dal 1987</span><i>✦</i><span>48 ore di fermentazione</span><i>✦</i><span>Ritiro dalle 7:00</span><i>✦</i><span>Consegna in bici cargo entro 3 km</span><i>✦</i><span>Torte su misura con 48 ore di preavviso</span><i>✦</i><span>Grissini stirati a mano</span><i>✦</i>
+    </div>
+  </div>
+
+  <!-- ───────────────────────── SFORNATE ───────────────────────── -->
+  <section class="section bakes" id="sfornate" aria-labelledby="bakesTitle">
+    <div class="section__head">
+      <p class="eyebrow">Il programma del forno, oggi</p>
+      <h2 id="bakesTitle">Sfornate di oggi</h2>
+      <p class="section__lede">Ogni infornata ha il suo orario. Prenota dalla sfornata che preferisci e la mettiamo da parte appena esce.</p>
+    </div>
+    <div class="bakes__rail" id="bakesRail" tabindex="0" aria-label="Linea del tempo delle sfornate di oggi">
+      <div class="bakes__scale" id="bakesScale"></div>
+      <ol class="bakes__list" id="bakesList"></ol>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── BANCONE ───────────────────────── -->
+  <section class="section counter" id="bancone" aria-labelledby="counterTitle">
+    <div class="section__head section__head--split">
+      <div>
+        <p class="eyebrow">Ordina per il ritiro o la consegna</p>
+        <h2 id="counterTitle">Il bancone</h2>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Categorie" id="catTabs">
+        <button role="tab" aria-selected="true" data-cat="tutto" id="tab-tutto">Tutto</button>
+        <button role="tab" aria-selected="false" data-cat="pane" id="tab-pane">Pane</button>
+        <button role="tab" aria-selected="false" data-cat="lievitati" id="tab-lievitati">Lievitati</button>
+        <button role="tab" aria-selected="false" data-cat="pasticceria" id="tab-pasticceria">Pasticceria</button>
+      </div>
+    </div>
+    <div class="shelf" id="shelf" role="tabpanel" aria-labelledby="tab-tutto"></div>
+    <p class="allergen-key"><strong>Allergeni</strong> <span><b>G</b> glutine</span> <span><b>L</b> latte</span> <span><b>U</b> uova</span> <span><b>F</b> frutta a guscio</span> <span><b>S</b> sesamo</span> <span><b>So</b> soia</span></p>
+  </section>
+
+  <!-- ───────────────────────── TORTE ───────────────────────── -->
+  <section class="section cake" id="torte" aria-labelledby="cakeTitle">
+    <div class="section__head">
+      <p class="eyebrow">Configuratore · pronta in 48 ore</p>
+      <h2 id="cakeTitle">La tua torta, strato per strato</h2>
+      <p class="section__lede">Scegli piani, porzioni, impasto, crema e decorazioni. La vedi montare mentre la componi, e il prezzo si aggiorna al grammo.</p>
+    </div>
+
+    <div class="cake__grid">
+      <div class="cake__stage" id="cakeStage">
+        <div class="cake__stage-top">
+          <span class="cake__dims mono" id="cakeDims">Ø 22 cm · 1,6 kg</span>
+          <button class="chip-btn" type="button" id="sliceToggle" aria-pressed="false">Vedi la fetta</button>
+        </div>
+        <svg id="cakeSvg" viewBox="0 96 420 324" role="img" aria-label="Anteprima della torta"></svg>
+        <div class="cake__stage-bottom">
+          <div>
+            <span class="mono small muted">Totale torta</span>
+            <strong class="cake__price" id="cakePrice">€ 0,00</strong>
+          </div>
+          <button class="btn btn--ink" type="button" id="cakeAdd">Aggiungi al sacchetto</button>
+        </div>
+      </div>
+
+      <form class="cake__form" id="cakeForm" autocomplete="off">
+        <fieldset class="step">
+          <legend><span class="step__n">1</span> Occasione</legend>
+          <div class="chips" data-group="occasion"></div>
+        </fieldset>
+        <fieldset class="step">
+          <legend><span class="step__n">2</span> Piani e porzioni</legend>
+          <div class="seg" data-group="tiers" role="radiogroup" aria-label="Numero di piani"></div>
+          <label class="range">
+            <span class="range__row"><span>Porzioni</span><output id="servingsOut" class="mono">16 persone</output></span>
+            <input type="range" id="servings" min="8" max="60" step="2" value="16">
+          </label>
+        </fieldset>
+        <fieldset class="step">
+          <legend><span class="step__n">3</span> Impasto</legend>
+          <div class="swatches" data-group="base"></div>
+        </fieldset>
+        <fieldset class="step">
+          <legend><span class="step__n">4</span> Farcitura</legend>
+          <div class="swatches" data-group="filling"></div>
+        </fieldset>
+        <fieldset class="step">
+          <legend><span class="step__n">5</span> Copertura</legend>
+          <div class="swatches" data-group="coating"></div>
+          <div class="tints" data-group="tint" hidden></div>
+        </fieldset>
+        <fieldset class="step">
+          <legend><span class="step__n">6</span> Decorazioni <small>più di una</small></legend>
+          <div class="chips" data-group="decor" data-multi="true"></div>
+        </fieldset>
+        <fieldset class="step">
+          <legend><span class="step__n">7</span> Scritta</legend>
+          <label class="field">
+            <span class="sr-only">Scritta sulla torta</span>
+            <input type="text" id="cakeText" maxlength="24" placeholder="Auguri Giulia!" value="Auguri Giulia!">
+            <span class="field__hint mono" id="cakeTextCount">14/24</span>
+          </label>
+        </fieldset>
+        <fieldset class="step">
+          <legend><span class="step__n">8</span> Giorno di ritiro</legend>
+          <div class="dates" data-group="date"></div>
+          <p class="note">Le torte su misura richiedono 48 ore di preavviso. Il lunedì siamo chiusi.</p>
+        </fieldset>
+      </form>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── 48 ORE ───────────────────────── -->
+  <section class="section ferment" id="lievito" aria-labelledby="fermentTitle">
+    <div class="section__head">
+      <p class="eyebrow">Perché costa un po' di più</p>
+      <h2 id="fermentTitle">48 ore di pazienza</h2>
+    </div>
+    <div class="ferment__grid">
+      <div class="ferment__stage" aria-hidden="true">
+        <div class="ferment__readout">
+          <div><span class="mono small muted">Tempo</span><strong class="ferment__hours" id="fHours">0 h</strong></div>
+          <div><span class="mono small muted">Temperatura</span><strong class="ferment__temp" id="fTemp">28 °C</strong></div>
+        </div>
+        <svg viewBox="0 0 300 260" class="dough" id="dough">
+          <defs>
+            <radialGradient id="doughGrad" cx="40%" cy="30%" r="80%">
+              <stop class="dough-a" offset="0"/>
+              <stop class="dough-b" offset="1"/>
+            </radialGradient>
+          </defs>
+          <ellipse cx="150" cy="232" rx="120" ry="12" class="dough__bowl-shadow"/>
+          <g class="dough__ball">
+            <path class="dough__body" d="M50 230c-8-70 38-120 100-120s108 50 100 120c-40 8-160 8-200 0Z" fill="url(#doughGrad)"/>
+            <g class="dough__bubbles"></g>
+            <path class="dough__score" d="M100 150c30-14 70-16 100-4"/>
+          </g>
+        </svg>
+        <div class="ferment__bar"><span id="fBar"></span></div>
+      </div>
+      <ol class="ferment__steps" id="fSteps">
+        <li data-h="0" data-t="28" data-s=".62" data-b="0" data-c="0">
+          <span class="mono">T + 0 h</span>
+          <h3>Rinfresco del lievito madre</h3>
+          <p>La nostra madre ha 38 anni. La nutriamo con farina e acqua e la lasciamo lavorare quattro ore a 28&nbsp;°C.</p>
+        </li>
+        <li data-h="4" data-t="24" data-s=".7" data-b="3" data-c="0">
+          <span class="mono">T + 4 h</span>
+          <h3>Impasto</h3>
+          <p>Farina tipo 1 di grani antichi da Carmagnola, acqua al 78%, sale marino. Niente lievito di birra, niente miglioratori.</p>
+        </li>
+        <li data-h="6" data-t="24" data-s=".8" data-b="7" data-c="0">
+          <span class="mono">T + 6 h</span>
+          <h3>Pieghe a mano</h3>
+          <p>Quattro serie di pieghe ogni trenta minuti. Danno forza alla maglia glutinica senza stressarla.</p>
+        </li>
+        <li data-h="8" data-t="4" data-s=".95" data-b="14" data-c="0">
+          <span class="mono">T + 8 h</span>
+          <h3>Riposo in cella a 4&nbsp;°C</h3>
+          <p>Trentasei ore al freddo. È qui che nascono il profumo e quella crosta che scrocchia.</p>
+        </li>
+        <li data-h="46" data-t="22" data-s="1.05" data-b="20" data-c="0" data-score="1">
+          <span class="mono">T + 46 h</span>
+          <h3>Formatura e taglio</h3>
+          <p>Ogni pagnotta viene formata a mano e incisa con la lama. Il taglio decide dove si aprirà l'orecchio.</p>
+        </li>
+        <li data-h="48" data-t="250" data-s="1.1" data-b="20" data-c="1" data-score="1">
+          <span class="mono">T + 48 h</span>
+          <h3>Cottura su pietra</h3>
+          <p>Quarantacinque minuti a 250&nbsp;°C, con vapore all'inizio. Poi sul bancone, e alle 7:00 nel tuo sacchetto.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── ORARI ───────────────────────── -->
+  <section class="section visit" id="orari" aria-labelledby="visitTitle">
+    <div class="visit__grid">
+      <div>
+        <p class="eyebrow">Passa a trovarci</p>
+        <h2 id="visitTitle">Orari e ritiro</h2>
+        <table class="hours">
+          <caption class="sr-only">Orari di apertura</caption>
+          <tbody id="hoursBody">
+            <tr><th scope="row">Lunedì</th><td>Chiuso</td></tr>
+            <tr><th scope="row">Martedì – Venerdì</th><td>7:00 – 19:30</td></tr>
+            <tr><th scope="row">Sabato</th><td>7:00 – 19:30</td></tr>
+            <tr><th scope="row">Domenica</th><td>7:00 – 13:00</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="visit__cards">
+        <article class="ticket-card">
+          <h3>Ritiro al bancone</h3>
+          <p>Scegli un orario a intervalli di 15 minuti. Quando l'ordine è pronto ti arriva un messaggio su WhatsApp con il tuo numero.</p>
+        </article>
+        <article class="ticket-card">
+          <h3>Consegna in bici cargo</h3>
+          <p>Entro 3&nbsp;km dal forno, CAP da 10121 a 10128. € 2,90, gratis sopra i € 30.</p>
+        </article>
+        <article class="ticket-card">
+          <h3>Dove siamo</h3>
+          <p class="mono selectable">Via dei Fornai 12, 10123 Torino<br>+39 011 000 0000</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section proto" aria-labelledby="protoTitle">
+    <h2 id="protoTitle" class="proto__title">Cosa c'è in questo prototipo</h2>
+    <ul class="proto__list">
+      <li><strong>Funziona già nel browser</strong> Catalogo, configuratore torte, sacchetto, checkout in tre passaggi, vista titolare con avviso sonoro. Apri la vista titolare in un'altra scheda e gli ordini arrivano in tempo reale.</li>
+      <li><strong>Simulato</strong> Pagamenti, messaggi WhatsApp e SMS, disponibilità degli orari. Gli ordini restano solo in questo browser.</li>
+      <li><strong>Con il backend</strong> Pagamenti con Stripe o Satispay, avvisi tramite WhatsApp Business API, magazzino e orari gestiti dal titolare.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="footer">
+  <span class="logo__script">Mollica</span>
+  <p>Attività fittizia creata per un progetto dimostrativo. Nessun ordine viene inviato o addebitato.</p>
+</footer>
+
+<!-- ───────────────────────── OVERLAYS ───────────────────────── -->
+
+<dialog class="sheet" id="optionSheet" aria-labelledby="optTitle"></dialog>
+
+<dialog class="drawer" id="bagDrawer" aria-labelledby="bagTitle">
+  <div class="drawer__head">
+    <h2 id="bagTitle">Il tuo sacchetto</h2>
+    <button class="icon-btn" type="button" data-close aria-label="Chiudi il sacchetto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="drawer__body" id="bagBody"></div>
+  <div class="drawer__foot" id="bagFoot"></div>
+</dialog>
+
+<dialog class="checkout" id="checkout" aria-labelledby="coTitle"></dialog>
+
+<dialog class="owner" id="owner" aria-labelledby="ownerTitle"></dialog>
+
+<div class="phone" id="phone" popover="manual" aria-live="polite">
+  <div class="phone__frame">
+    <div class="phone__head">
+      <span class="phone__avatar" id="phoneAvatar">M</span>
+      <div><strong id="phoneName">Mollica Forno</strong><small id="phoneSub">WhatsApp · account aziendale</small></div>
+      <button class="phone__close" type="button" id="phoneClose" aria-label="Chiudi l'anteprima messaggi">×</button>
+    </div>
+    <div class="phone__chat" id="phoneChat"></div>
+  </div>
+  <p class="phone__cap mono" id="phoneCap">Anteprima del messaggio ricevuto dal cliente</p>
+</div>
+
+<div class="toasts" id="toasts" popover="manual" aria-live="polite"></div>
+
+<script src="js/data.js"></script>
+<script src="js/art.js"></script>
+<script src="js/app.js"></script>
+<script src="js/cake.js"></script>
+<script src="js/checkout.js"></script>
+<script src="js/owner.js"></script>
+</body>
+</html>
