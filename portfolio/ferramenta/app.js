@@ -149,26 +149,20 @@
     $("b", el).textContent = open ? "Aperto ora" : "Chiuso · ordina online";
   })();
 
-  /* ---------------- Loop di scroll: metro, nav, parallax, cursore ---------------- */
-  const tapeBlade = $("#tapeBlade"), tapeReadout = $("#tapeReadout"), nav = $("#nav");
+  /* ---------------- Loop di scroll: nav, parallax ---------------- */
+  const nav = $("#nav");
   const heroImg = $(".hero__img"), heroTitle = $("#heroTitle"), hero = $("#hero");
   const footWord = $(".footer__word");
   const parallax = [
     { el: $(".config__bg"), k: 0.12 },
     { el: $(".workshop__media img"), k: 0.1 },
   ];
-  let lastY = window.scrollY, vel = 0, screwAngle = 0;
+  let lastY = window.scrollY, vel = 0;
 
   function onScrollFrame() {
     const y = window.scrollY;
-    const max = document.documentElement.scrollHeight - innerHeight;
-    const p = max > 0 ? y / max : 0;
     vel = y - lastY; lastY = y;
 
-    tapeBlade.style.width = (p * 100).toFixed(2) + "%";
-    tapeReadout.style.left = (p * 100).toFixed(2) + "%";
-    tapeReadout.style.transform = `translateX(${p < 0.08 ? 0 : -100}%)`;
-    tapeReadout.textContent = Math.round(y / 37.8).toLocaleString("it-IT") + " cm";
 
     nav.classList.toggle("is-solid", y > 60);
     nav.classList.toggle("is-hidden", y > 400 && vel > 2);
@@ -195,16 +189,6 @@
       footWord.style.setProperty("--fill", (f * 100).toFixed(1) + "%");
     }
 
-    screwAngle += vel * 0.9;
-  }
-
-  // cursore a vite: gira quando scorri (avvita giù, svita su)
-  const cursor = $("#cursor");
-  let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy;
-  if (canHover && cursor) {
-    addEventListener("pointermove", (e) => { tx = e.clientX; ty = e.clientY; cursor.classList.remove("is-hidden"); }, { passive: true });
-    document.addEventListener("pointerleave", () => cursor.classList.add("is-hidden"));
-    document.addEventListener("pointerover", (e) => cursor.classList.toggle("is-hover", !!e.target.closest("a, button, label, input, .unit")));
   }
 
   // torcia nella hero
@@ -218,10 +202,6 @@
 
   function frame(t) {
     onScrollFrame();
-    if (cursor && canHover) {
-      cx += (tx - cx) * 0.22; cy += (ty - cy) * 0.22;
-      cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0) rotate(${screwAngle}deg)`;
-    }
     if (!torchUser) { gx = 0.55 + Math.sin(t / 2400) * 0.22; gy = 0.42 + Math.cos(t / 1900) * 0.14; }
     lx += (gx - lx) * 0.08; ly += (gy - ly) * 0.08;
     torch.style.setProperty("--x", (lx * 100).toFixed(2) + "%");

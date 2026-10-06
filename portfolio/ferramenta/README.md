@@ -6,7 +6,6 @@ Il sito è in italiano, è statico e non richiede build: apri `index.html` oppur
 ## Cosa mostra
 - **Saracinesca d'apertura**: all'avvio la serranda si alza e si accende l'insegna al neon "APERTO".
 - **Hero con torcia**: un fascio di luce illumina il laboratorio buio. Scorrendo, il titolo si stringe come in una morsa (asse `wdth` del font).
-- **Metro a nastro**: indica l'avanzamento dello scroll in centimetri. Il cursore è una vite che si avvita mentre scorri.
 - **Nastro di cantiere**: due nastri incrociati che si muovono più veloci quando scorri.
 - **Cassettiera dei reparti**: cassetti con portaetichetta e maniglia in ottone che si aprono e mostrano la foto del reparto.
 - **Bancone**: cartellini del prezzo appesi che oscillano, varianti (batteria, misura), scorte al banco e animazione "vola nel carrello".
