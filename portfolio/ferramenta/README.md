@@ -22,6 +22,5 @@ Ordini, pagamenti (Stripe/Satispay), invio di WhatsApp/SMS (WhatsApp Cloud API o
 Per ora carrello e ordini vivono solo nel `localStorage` del browser.
 
 ## Foto
-Le foto sono di Unsplash e vengono caricate dal browser tramite ID (`unsplash.com/photos/<id>/download?w=…`).
-Se una foto non si carica, al suo posto compare una texture "acciaio spazzolato".
-Per la produzione è meglio scaricare le foto e servirle in locale (WebP).
+Le 15 foto sono di Unsplash (licenza Unsplash, uso commerciale gratuito) e sono salvate in `img/` come JPEG compressi.
+Il nome di ogni file è l'ID della foto su `images.unsplash.com`.

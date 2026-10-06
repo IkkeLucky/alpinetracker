@@ -14,7 +14,7 @@
   const canHover = matchMedia("(hover: hover)").matches;
   const eur = new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" });
   const fmt = (n) => eur.format(Math.round(n * 100) / 100);
-  const IMG = (id, w = 1200) => `https://unsplash.com/photos/${id}/download?w=${w}`;
+  const IMG = (id) => (window.__IMGS && window.__IMGS[id]) || `img/${id}.jpg`;
 
   const store = {
     get(k, d) { try { const v = localStorage.getItem("bf_" + k); return v ? JSON.parse(v) : d; } catch { return d; } },
@@ -29,7 +29,7 @@
     if (!img.closest(".hero")) img.loading = "lazy";
     img.addEventListener("load", () => img.classList.add("is-loaded"), { once: true });
     img.addEventListener("error", () => { img.style.visibility = "hidden"; }, { once: true });
-    img.src = IMG(img.dataset.img, +img.dataset.w || 1200);
+    img.src = IMG(img.dataset.img);
   }
   const hydrateImages = (root = document) => $$("img[data-img]:not([src])", root).forEach(loadImg);
 
@@ -44,29 +44,29 @@
 
   /* ---------------- Dati ---------------- */
   const CATS = [
-    { k: "elettro", label: "Elettroutensili", img: "Klby0nxseY8" },
-    { k: "manuali", label: "Utensili manuali", img: "BLw1hVxlKlQ" },
-    { k: "viteria", label: "Viteria e fissaggio", img: "wYKgV2SZMc8" },
-    { k: "legno", label: "Legno e taglio", img: "cNLzySWt_DY" },
-    { k: "organizza", label: "Organizzazione", img: "t5YUoHW6zRo" },
-    { k: "kit", label: "Kit fai da te", img: "Mx88aNChvlE" },
-    { k: "#chiavi", label: "Duplicazione chiavi", img: "Z3vFp7szCAY", note: "Su misura" },
-    { k: "#officina", label: "Noleggio e officina", img: "fYD54gVXFGM", note: "Servizi" },
+    { k: "elettro", label: "Elettroutensili", img: "1504148455328-c376907d081c" },
+    { k: "manuali", label: "Utensili manuali", img: "1508873535684-277a3cbcc4e8" },
+    { k: "viteria", label: "Viteria e fissaggio", img: "1581244277943-fe4a9c777189" },
+    { k: "legno", label: "Legno e taglio", img: "1513467535987-fd81bc7d62f8" },
+    { k: "organizza", label: "Organizzazione", img: "1426927308491-6380b6a9936f" },
+    { k: "kit", label: "Kit fai da te", img: "1597484661643-2f5fef640dd1" },
+    { k: "#chiavi", label: "Duplicazione chiavi", img: "1567361808960-dec9cb578182", note: "Su misura" },
+    { k: "#officina", label: "Noleggio e officina", img: "1558618666-fcd25c85cd64", note: "Servizi" },
   ];
 
   const PRODUCTS = [
-    { id: "p1", cat: "elettro", name: "Trapano avvitatore 18V brushless", price: 149, was: 179, stock: 4, img: "Klby0nxseY8", opts: [["2 × 2 Ah", 0], ["2 × 4 Ah", 40]] },
-    { id: "p2", cat: "elettro", name: "Avvitatore a impulsi 18V", price: 129, stock: 2, img: "CuDoRFyTkAQ" },
-    { id: "p3", cat: "elettro", name: "Smerigliatrice angolare", price: 89.9, stock: 6, img: "PUt8zeqbMmk", opts: [["115 mm", 0], ["125 mm", 10]] },
-    { id: "p4", cat: "legno", name: "Sega circolare 190 mm", price: 179, stock: 1, img: "cNLzySWt_DY" },
-    { id: "p5", cat: "manuali", name: "Martello da carpentiere, manico in frassino", price: 24.5, stock: 14, img: "fYD54gVXFGM", opts: [["450 g", 0], ["600 g", 3]] },
-    { id: "p6", cat: "manuali", name: "Set chiavi combinate 12 pezzi", price: 39.9, was: 49.9, stock: 8, img: "BLw1hVxlKlQ" },
-    { id: "p7", cat: "legno", name: "Kit pialla e scalpelli", price: 64, stock: 3, img: "pHkL5NKscwU" },
-    { id: "p8", cat: "viteria", name: "Viti legno inox, 600 pezzi assortiti", price: 18.9, stock: 40, img: "LjnP00C93Co", opts: [["Ø 4", 0], ["Ø 5", 2]] },
-    { id: "p9", cat: "viteria", name: "Tasselli e viti misti, valigetta", price: 12.5, stock: 25, img: "wYKgV2SZMc8" },
-    { id: "p10", cat: "kit", name: "Kit fai da te casa, 48 pezzi", price: 69, was: 85, stock: 5, img: "Mx88aNChvlE" },
-    { id: "p11", cat: "organizza", name: "Pannello portautensili forato", price: 34, stock: 7, img: "t5YUoHW6zRo" },
-    { id: "p12", cat: "manuali", name: "Martello e cacciaviti, set casa", price: 19.9, stock: 11, img: "Z3vFp7szCAY" },
+    { id: "p1", cat: "elettro", name: "Trapano avvitatore 18V brushless", price: 149, was: 179, stock: 4, img: "1504148455328-c376907d081c", opts: [["2 × 2 Ah", 0], ["2 × 4 Ah", 40]] },
+    { id: "p2", cat: "elettro", name: "Trapano avvitatore compatto 18V", price: 129, stock: 2, img: "1572981779307-38b8cabb2407" },
+    { id: "p3", cat: "elettro", name: "Smerigliatrice angolare", price: 89.9, stock: 6, img: "1504917595217-d4dc5ebe6122", opts: [["115 mm", 0], ["125 mm", 10]] },
+    { id: "p4", cat: "legno", name: "Sega circolare 190 mm", price: 179, stock: 1, img: "1513467535987-fd81bc7d62f8" },
+    { id: "p5", cat: "manuali", name: "Martello da carpentiere, manico in legno", price: 24.5, stock: 14, img: "1586864387967-d02ef85d93e8", opts: [["450 g", 0], ["600 g", 3]] },
+    { id: "p6", cat: "manuali", name: "Set pinze, martello e metro", price: 39.9, was: 49.9, stock: 8, img: "1567361808960-dec9cb578182" },
+    { id: "p7", cat: "legno", name: "Troncatrice radiale 210 mm", price: 219, stock: 3, img: "1505798577917-a65157d3320a" },
+    { id: "p8", cat: "viteria", name: "Inserti per avvitatore, set 32 pezzi", price: 18.9, stock: 40, img: "1581244277943-fe4a9c777189", opts: [["Standard", 0], ["Impact", 6]] },
+    { id: "p9", cat: "viteria", name: "Chiodi assortiti con martello e pinza", price: 22.5, stock: 25, img: "1581783898377-1c85bf937427" },
+    { id: "p10", cat: "kit", name: "Kit fai da te casa, 48 pezzi", price: 69, was: 85, stock: 5, img: "1597484661643-2f5fef640dd1" },
+    { id: "p11", cat: "organizza", name: "Pannello portautensili da parete", price: 34, stock: 7, img: "1426927308491-6380b6a9936f" },
+    { id: "p12", cat: "manuali", name: "Pinze e martello, set officina", price: 19.9, stock: 11, img: "1508873535684-277a3cbcc4e8" },
   ];
 
   /* ---------------- Smooth scroll ---------------- */
@@ -341,7 +341,7 @@
     } else {
       list.innerHTML = cart.map((l, i) => `
         <div class="line">
-          <div class="line__img">${l.img ? `<img src="${IMG(l.img, 200)}" alt="" onerror="this.remove()">` : (l.badge || "BF")}</div>
+          <div class="line__img">${l.img ? `<img src="${IMG(l.img)}" alt="" onerror="this.remove()">` : (l.badge || "BF")}</div>
           <div><div class="line__name">${l.name}</div>${l.meta ? `<div class="line__meta">${l.meta}</div>` : ""}
             <div class="line__ctrl"><button data-i="${i}" data-d="-1" aria-label="Diminuisci">−</button><span>${l.qty}</span><button data-i="${i}" data-d="1" aria-label="Aumenta">+</button></div></div>
           <div class="line__price">${fmt(l.price * l.qty)}</div>
